@@ -26,6 +26,8 @@ def generate_keypair():
         # Generate a random integer, g, that is both less than n^2, and coprime to n^2
         n2 = n ** 2
 
+        # Are these checks actually necessary?
+
         g = randint(0, (n2) - 1)
         if gmpy2.gcd(g, n2) != 1:
             continue
