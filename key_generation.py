@@ -8,7 +8,10 @@ def generate_keypair():
 
 
 def factors(n):
-    """Returns a set of the prime factors of n."""
+    """Returns a set of the prime factors of n. Leverage GMPY2's mpz class to do the heavy lifting.
+    
+    "Borrowed" from: https://stackoverflow.com/questions/23708035/most-efficient-way-to-find-all-factors-with-gmpy2-or-gmp
+    """
     result = set()
     result |= {mpz(1), mpz(n)}
 
