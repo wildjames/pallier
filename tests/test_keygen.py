@@ -15,6 +15,7 @@ L_tests = [
     ((15, 3), 4),
 ]
 
+
 @pytest.mark.parametrize("nums, expected", L_tests)
 def test_L(nums, expected):
     """Tests that L() is working as intended."""
