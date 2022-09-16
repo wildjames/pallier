@@ -1,5 +1,24 @@
 import pytest
+from gmpy2 import mpz
 import key_generation
+
+
+L_tests = [
+    ((7, 3), 2),
+    ((8, 3), 2),
+    ((9, 3), 2),
+    ((10, 3), 3),
+    ((11, 3), 3),
+    ((12, 3), 3),
+    ((13, 3), 4),
+    ((14, 3), 4),
+    ((15, 3), 4),
+]
+
+@pytest.mark.parametrize("nums, expected", L_tests)
+def test_L(nums, expected):
+    """Tests that L() is working as intended."""
+    assert key_generation.L(nums[0], nums[1]) == expected
 
 
 gcd_tests = [
@@ -30,9 +49,9 @@ def test_gcd_condition(nums, expected):
 
 def test_prime_generator():
     """Tests that the prime generator is working as intended.
-    
+
     Checks 1000 generated numnbers.
     """
     for _ in range(1000):
         p = key_generation.generate_prime()
-        assert len(key_generation.factors(p)) == 2
+        assert len(key_generation.factorint(p)) == 1

@@ -1,18 +1,56 @@
 import gmpy2
 from gmpy2 import mpz
 from random import randint
+from sympy.ntheory import factorint
 
 
 def generate_keypair():
     """Returns a dict, containing the public and private keys."""
 
-    # Generate two large primes, p and q.
-
-    # Check that p and q are coprime.
+    print("Searching for two primes...")
+    i = 0
+    while True:
+        # Generate two large primes, p and q.
+        p = generate_prime()
+        q = generate_prime()
+        # Check that the product of p and q is coprime with the product of (q-1), (p-1).
+        if check_gcd_condition(p, q):
+            break
+        print(f"  {i}", end="\r")
+        i += 1
+    print("\nFound two primes that satisfy the condition:")
+    print(f"    p: {p}")
+    print(f"    q: {q}")
 
     # Calculate n = p * q.
+    n = p * q
+    print(f"    n: {n}")
 
     # Calculate lambda(n) = lcm(p-1, q-1).
+    lambda_n = gmpy2.lcm(p - 1, q - 1)  
+    print(f"    lambda(n): {lambda_n}")
+
+    # Generate a random integer, g, that is both less than n^2, and coprime to n^2
+    n_factors = factorint(n**2)
+    print(f"n^2: {n**2}")
+    print(f"n^2 has factors: {n_factors}")
+    while True:
+        g = randint(0, (n**2)-1)
+        common_factors = factorint(g) & n_factors
+
+        if len(common_factors) != 1:
+            continue
+        print(f"Found g = {g}")
+
+        # Calculate mu = (lambda(n) ^ -1) mod n.
+        g_lambda_n = gmpy2.powmod(g, lambda_n, n**2) 
+        tmp = pow(L(g_lambda_n, n), -1)
+        mu = tmp % n
+
+        if mu != 0:
+            print(f"    mu: {mu}")
+            break
+        print("Mu does not exist")
 
     # Calculate the public key, e, such that 1 < e < lambda(n) and gcd(e, lambda(n)) == 1.
 
@@ -23,34 +61,9 @@ def generate_keypair():
     return {"public": None, "private": None}
 
 
-def factors(n):
-    """Returns a set of the prime factors of n. Leverage GMPY2's mpz class to do the heavy lifting.
-    
-    "Borrowed" from: https://stackoverflow.com/questions/23708035/most-efficient-way-to-find-all-factors-with-gmpy2-or-gmp
-    """
-    result = set()
-    result |= {mpz(1), mpz(n)}
-
-    def all_multiples(result, n, factor):
-        z = mpz(n)
-        while gmpy2.f_mod(mpz(z), factor) == 0:
-            z = gmpy2.divexact(z, factor)
-            result |= {mpz(factor), z}
-        return result
-
-    result = all_multiples(result, n, 2)
-    result = all_multiples(result, n, 3)
-
-    for i in range(1, gmpy2.isqrt(n) + 1, 6):
-        i1 = mpz(i) + 1
-        i2 = mpz(i) + 5
-        div1, mod1 = gmpy2.f_divmod(n, i1)
-        div2, mod2 = gmpy2.f_divmod(n, i2)
-        if mod1 == 0:
-            result |= {i1, div1}
-        if mod2 == 0:
-            result |= {i2, div2}
-    return result
+def L(x, n):
+    """Returns the the minimum value of v such that (x-1) > v*n."""
+    return (x - 1) // n 
 
 
 def check_gcd_condition(p, q):
@@ -60,16 +73,11 @@ def check_gcd_condition(p, q):
 
     Where "gcd" is the greatest common divisor. In effect, this checks that pq and (p-1)(q-1) are coprime.
     """
-
-    pq_factors = factors(p * q)
-    pq_minus_1_factors = factors((p - 1) * (q - 1))
-
-    # If the intersection of the two sets is only the number 1, then the two sets are coprime.
-    return len(pq_factors & pq_minus_1_factors) == 1
+    return gmpy2.gcd(p*q, (p - 1) * (q - 1)) == 1
 
 
 def generate_prime():
     """Returns a prime number between 1,000,000 and 10,000,000."""
-    random_starter = randint(int(1e6), int(1e7))
+    random_starter = randint(int(1e3), int(1e4))
 
     return gmpy2.next_prime(random_starter)
