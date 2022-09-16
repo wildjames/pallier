@@ -26,3 +26,13 @@ def test_gcd_condition(nums, expected):
     """Tests that the coprime_checker is working as intended."""
     p, q = nums
     assert key_generation.check_gcd_condition(p, q) == expected
+
+
+def test_prime_generator():
+    """Tests that the prime generator is working as intended.
+    
+    Checks 1000 generated numnbers.
+    """
+    for _ in range(1000):
+        p = key_generation.generate_prime()
+        assert len(key_generation.factors(p)) == 2

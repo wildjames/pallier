@@ -1,9 +1,25 @@
 import gmpy2
 from gmpy2 import mpz
+from random import randint
 
 
 def generate_keypair():
     """Returns a dict, containing the public and private keys."""
+
+    # Generate two large primes, p and q.
+
+    # Check that p and q are coprime.
+
+    # Calculate n = p * q.
+
+    # Calculate lambda(n) = lcm(p-1, q-1).
+
+    # Calculate the public key, e, such that 1 < e < lambda(n) and gcd(e, lambda(n)) == 1.
+
+    # Calculate the private key, d, such that d * e == 1 (mod lambda(n)).
+
+    # Return the public and private keys.
+
     return {"public": None, "private": None}
 
 
@@ -48,4 +64,12 @@ def check_gcd_condition(p, q):
     pq_factors = factors(p * q)
     pq_minus_1_factors = factors((p - 1) * (q - 1))
 
+    # If the intersection of the two sets is only the number 1, then the two sets are coprime.
     return len(pq_factors & pq_minus_1_factors) == 1
+
+
+def generate_prime():
+    """Returns a prime number between 1,000,000 and 10,000,000."""
+    random_starter = randint(int(1e6), int(1e7))
+
+    return gmpy2.next_prime(random_starter)
