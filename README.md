@@ -24,3 +24,10 @@ conda activate pallier
 pip install -U pip
 pip install -r requirements.txt
 ```
+
+
+# Notes and thoughts
+
+The pallier system seems to be attractive in the sense that the encryption of two messages, in conjunction with a public key, can be converted into the encryption of the *sum* of the two messages, which is not typically possible. I will admit that the utility of this is not immediately apparent to me, but I can at least appreciate that this is interesting behaviour.
+
+Also, since for now I have little understanding of what I'm doing, I'll not write tests. That can come later, and I'll probably do an initial coarse one by taking a message, encrypting it, decrypting the result, and seeing if it's the same. In the meantime I'll get the key generation working.
