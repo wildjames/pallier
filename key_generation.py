@@ -6,62 +6,58 @@ from sympy.ntheory import factorint
 
 def generate_keypair():
     """Returns a dict, containing the public and private keys."""
-
+    output = {}
+    
     print("Searching for two primes...")
-    i = 0
     while True:
         # Generate two large primes, p and q.
         p = generate_prime()
         q = generate_prime()
         # Check that the product of p and q is coprime with the product of (q-1), (p-1).
-        if check_gcd_condition(p, q):
-            break
-        print(f"  {i}", end="\r")
-        i += 1
-    print("\nFound two primes that satisfy the condition:")
-    print(f"    p: {p}")
-    print(f"    q: {q}")
-
-    # Calculate n = p * q.
-    n = p * q
-    print(f"    n: {n}")
-
-    # Calculate lambda(n) = lcm(p-1, q-1).
-    lambda_n = gmpy2.lcm(p - 1, q - 1)
-    print(f"    lambda(n): {lambda_n}")
-
-    # Generate a random integer, g, that is both less than n^2, and coprime to n^2
-    n_factors = list(factorint(n**2).keys())
-    print(f"n^2: {n**2}")
-    print(f"n^2 has factors: {n_factors}")
-    while True:
-        g = randint(0, (n**2) - 1)
-        print(factorint(g).keys())
-        common_factors = [k for k in factorint(g).keys() if k in n_factors]
-        print(f"Common factors: {common_factors}")
-        input("> ")
-
-        if len(common_factors) != 0:
+        if not check_gcd_condition(p, q):
             continue
-        print(f"Found g = {g}")
 
-        # Calculate mu = (lambda(n) ^ -1) mod n.
-        g_lambda_n = gmpy2.powmod(g, lambda_n, n**2)
-        tmp = pow(L(g_lambda_n, n), -1)
-        mu = tmp % n
+        # Calculate n = p * q.
+        n = p * q
 
-        if mu != 0:
-            print(f"    mu: {mu}")
-            break
-        print("Mu does not exist")
+        # Calculate lambda = lcm(p-1, q-1).
+        lambda_n = gmpy2.lcm(p - 1, q - 1)
 
-    # Calculate the public key, e, such that 1 < e < lambda(n) and gcd(e, lambda(n)) == 1.
+        # Generate a random integer, g, that is both less than n^2, and coprime to n^2
+        n2 = n ** 2
 
-    # Calculate the private key, d, such that d * e == 1 (mod lambda(n)).
+        g = randint(0, (n2) - 1)
+        if gmpy2.gcd(g, n2) != 1:
+            continue
 
-    # Return the public and private keys.
+        # Is gcd((g^lambda-1)/n,n) equal to 1?
+        if gmpy2.gcd((g**lambda_n - 1) // n, n) != 1:
+            continue
 
-    return {"public": None, "private": None}
+        # Is g^lambda - 1 mod n == 1?
+        g_lambda_n = gmpy2.powmod(g, lambda_n, n)
+        if g_lambda_n != 1:
+            continue
+
+        #Calculate mu
+        g_lambda_n2 = gmpy2.powmod(g, lambda_n, n2)
+        mu = gmpy2.powmod(L(g_lambda_n2, n), -1, n)
+        
+        print(f"    p: {p}")
+        print(f"    q: {q}")
+        print(f"    n: {n}")
+        print(f"    lambda: {lambda_n}")
+        print(f"    g:   {g}")
+        print(f"    g^lambda mod n: {g_lambda_n}")
+        print(f"    mu: {mu}")
+        
+        break
+
+    # Build the output
+    output["public"] = (int(n), int(g))
+    output["private"] = (int(lambda_n), int(mu))
+
+    return output
 
 
 def L(x, n):
