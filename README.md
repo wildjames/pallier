@@ -31,3 +31,5 @@ pip install -r requirements.txt
 The pallier system seems to be attractive in the sense that the encryption of two messages, in conjunction with a public key, can be converted into the encryption of the *sum* of the two messages, which is not typically possible. I will admit that the utility of this is not immediately apparent to me, but I can at least appreciate that this is interesting behaviour.
 
 Also, since for now I have little understanding of what I'm doing, I'll not write tests. That can come later, and I'll probably do an initial coarse one by taking a message, encrypting it, decrypting the result, and seeing if it's the same. In the meantime I'll get the key generation working.
+
+Part of the key generation is getting the factors of a big number. Mathematicians seem to love that stuff, but I'm just going to use a function I found on [stackoverflow](https://stackoverflow.com/questions/23708035/most-efficient-way-to-find-all-factors-with-gmpy2-or-gmp). No need to reinvent the wheel.
