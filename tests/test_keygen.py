@@ -56,3 +56,20 @@ def test_prime_generator():
     for _ in range(1000):
         p = key_generation.generate_prime()
         assert len(key_generation.factorint(p)) == 1
+
+
+# Taken from https://asecuritysite.com/principles_pub/pal_ex
+keygen_tests = [
+    [
+        (47, 67, 4787652), {'public': (3149, 4787652), 'private': (1518, 206)}
+    ],
+    [   
+        (43, 41, 150), {'public': (1763, 150), 'private': (840, 672)}
+    ],
+]
+
+@pytest.mark.parametrize("nums,expected", keygen_tests)
+def test_keygen(nums, expected):
+    """Tests that the key generation is working as intended."""
+    p, q, g = nums
+    assert key_generation.generate_keypair(p, q, g) == expected
