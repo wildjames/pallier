@@ -1,6 +1,7 @@
 import pytest
-from gmpy2 import mpz
-import key_generation
+import helpers
+import pallier_parser
+from sympy.ntheory import factorint
 
 
 L_tests = [
@@ -19,57 +20,49 @@ L_tests = [
 @pytest.mark.parametrize("nums, expected", L_tests)
 def test_L(nums, expected):
     """Tests that L() is working as intended."""
-    assert key_generation.L(nums[0], nums[1]) == expected
-
-
-gcd_tests = [
-    [
-        # Two primes
-        (5, 7),
-        True,
-    ],
-    [
-        # One is a multiple of the other
-        (5, 10),
-        False,
-    ],
-    [
-        # Same number against itself
-        (10, 10),
-        True,
-    ],
-]
-
-
-@pytest.mark.parametrize("nums,expected", gcd_tests)
-def test_gcd_condition(nums, expected):
-    """Tests that the coprime_checker is working as intended."""
-    p, q = nums
-    assert key_generation.check_gcd_condition(p, q) == expected
+    assert helpers.L(nums[0], nums[1]) == expected
 
 
 def test_prime_generator():
     """Tests that the prime generator is working as intended.
 
-    Checks 1000 generated numnbers.
+    Checks 100000 generated numbers.
     """
-    for _ in range(1000):
-        p = key_generation.generate_prime()
-        assert len(key_generation.factorint(p)) == 1
+    for _ in range(100000):
+        p = helpers.generate_prime(4)
+        assert len(factorint(p)) == 1
+        assert len(str(int(p))) == 4
 
 
 # Taken from https://asecuritysite.com/principles_pub/pal_ex
 keygen_tests = [
-    [
-        (47, 67, 4787652), {'public': (3149, 4787652), 'private': (1518, 206)}
-    ],
-    [   
-        (43, 41, 150), {'public': (1763, 150), 'private': (840, 672)}
-    ],
+    [(47, 67, 4787652), {"public": (3149, 4787652), "private": (1518, 206)}],
+    [(43, 41, 150), {"public": (1763, 150), "private": (840, 672)}],
 ]
 
+
 @pytest.mark.parametrize("nums,expected", keygen_tests)
-def test_keygen(nums, expected):
+def test_calculate_keypair(nums, expected):
     """Tests that the key generation is working as intended."""
     p, q, g = nums
-    assert key_generation.generate_keypair(p, q, g) == expected
+    assert helpers.calculate_keypair(p, q, g) == expected
+
+
+message_tests = [
+    1,
+    12,
+    123,
+    1234,
+    12345,
+    123456,
+]
+
+@pytest.mark.parametrize("message", message_tests)
+def test_encrypt_decrypt(message):
+    """Tests that the encryption and decryption is working as intended."""
+    message_length = len(str(message))
+    prime_length = (message_length // 2) + 1
+    keypair = helpers.generate_keypair(prime_length=prime_length)
+    encrypted = pallier_parser.encrypt(message, keypair["public"])
+    decrypted = pallier_parser.decrypt(encrypted, keypair["public"], keypair["private"])
+    assert decrypted == message

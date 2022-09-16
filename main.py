@@ -1,16 +1,26 @@
-from key_generation import generate_keypair
-from pallier_parser import encrypt, decrypt, is_homomorphic, add_homo
+import logging
 
+from helpers import generate_keypair, calculate_keypair
+from pallier_parser import add_homo, decrypt, encrypt, is_homomorphic
+
+logging.basicConfig(level=logging.DEBUG)
 
 if __name__ in "__main__":
-    keys = generate_keypair(47, 67, 4787652)
 
-    message = 10
+    message = 123456
+    prime_length = 4
 
-    encrypted = encrypt(message, keys["public"], r=106)
+    message_length = len(str(message))
+    logging.info(f"Message length: {message_length}")
+    
+    keypair = generate_keypair(prime_length)
+    logging.info(f"  Keys:  {keypair}")
+    
+    encrypted = encrypt(message, keypair["public"])
+    logging.info(f"  Encrypted message: {encrypted}")
 
-    assert encrypted == 2476138
+    decrypted = decrypt(encrypted, keypair["public"], keypair["private"])
+    logging.info(f"  Decrypted message: {decrypted}")
 
-    print(encrypted)
-    print()
-    print(keys)
+    
+    assert decrypted == message, "Failed! Got a decryption of {} instead of {}".format(decrypted, message)

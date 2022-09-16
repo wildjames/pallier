@@ -1,5 +1,9 @@
+import logging
 from random import randint
-import numpy as np
+
+import gmpy2
+
+from helpers import L
 
 
 def encrypt(m, public_key, r=None):
@@ -15,7 +19,7 @@ def encrypt(m, public_key, r=None):
 
     if r is None:
         r = randint(0, n)
-    print(f"    r: {r}")
+    logging.debug(f"    r: {r}")
 
     cipher_text = (g ** m) * (r ** n)
     cipher_text = cipher_text % (n ** 2)
@@ -23,12 +27,20 @@ def encrypt(m, public_key, r=None):
     return cipher_text
 
 
-def decrypt(c, private_key):
+def decrypt(c, public_key, private_key):
     """Decrypts a message using the private key.
     
     The private key is a tuple of the form (lambda, mu).
     """
-    return None
+
+    lambda_n = private_key[0]
+    mu = private_key[1]
+    n = public_key[0]
+
+    c_lambda_mod_n2 = gmpy2.powmod(c, lambda_n, n**2)
+    message = L(c_lambda_mod_n2, n) * mu % n
+
+    return message
 
 
 def is_homomorphic():
