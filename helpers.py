@@ -5,6 +5,7 @@ from random import randint
 import gmpy2
 from gmpy2 import mpz
 
+logging.basicConfig(level=logging.DEBUG)
 
 def generate_keypair(prime_length=4):
     """Returns a dict, containing the public and private keys. These will be of the form:
@@ -20,10 +21,12 @@ def generate_keypair(prime_length=4):
 
     while True:
         p = generate_prime(prime_length)
+        print(f"  p: {p}")
         q = generate_prime(prime_length)
+        print(f"  q: {q}")
 
         # Check that the product of p and q is coprime with the product of (q-1), (p-1).
-        if gmpy2.gcd(p * q, (p - 1) * (q - 1)) == 1:
+        if gmpy2.gcd(p * q, ((p - 1) * (q - 1))) == 1:
             break
 
     # Generate a random integer, g, that is both less than n^2, and coprime to n^2
@@ -31,6 +34,7 @@ def generate_keypair(prime_length=4):
     n2 = n**2
     g = randint(0, (n2) - 1)
     g = mpz(g)
+    print(f"  g: {g}")
 
     keypair = calculate_keypair(p, q, g)
     if keypair is None:
@@ -53,11 +57,10 @@ def calculate_keypair(p, q, g):
     q = mpz(q)
 
     # Check that the product of p and q is coprime with the product of (q-1), (p-1).
-    if not gmpy2.gcd(p * q, (p - 1) * (q - 1)) == 1:
+    if not gmpy2.gcd(p * q, ((p - 1) * (q - 1))) == 1:
         print("!")
         return
 
-    # Calculate n = p * q.
     n = p * q
 
     # Calculate lambda = lcm(p-1, q-1).
@@ -76,12 +79,10 @@ def calculate_keypair(p, q, g):
     # Are these checks actually necessary? You get them for free if p and q have the same length, I think.
     # Is gcd((g^lambda-1)/n,n) equal to 1?
     if gmpy2.gcd((g**lambda_n - 1) // n, n) != 1:
-        logging.debug(
-            f"    (g^lambda-1)/n = {g**lambda_n - 1 // n} is not coprime to n = {n}"
-        )
+        logging.debug(f"    (g^lambda-1)/n is not coprime to n = {n}")
         return
 
-    # Is g^lambda - 1 mod n == 1?
+    # # Is g^lambda - 1 mod n == 1?
     g_lambda_n = gmpy2.powmod(g, lambda_n, n)
     if g_lambda_n != 1:
         logging.debug(f"    g^lambda-1 = {g_lambda_n} is not equal to 1")

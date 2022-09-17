@@ -32,3 +32,11 @@ The pallier system seems to be attractive in the sense that the encryption of tw
 
 Also, since for now I have little understanding of what I'm doing, I'll not write tests. That can come later, and I'll probably do an initial coarse one by taking a message, encrypting it, decrypting the result, and seeing if it's the same. In the meantime I'll get the key generation working.
 
+I have a bug! My testing is raising an intermittent mismatch between an encoded and decoded message, for example if I use the following:
+```
+p = 5
+q = 7
+g = 253
+r = 10
+```
+then messages get garbled. Is one of my checks incorrect? Probably. Look at `calculate_keypair` again.

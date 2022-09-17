@@ -11,6 +11,8 @@ def encrypt(m, public_key, r=None):
     
     The public key is a tuple of the form (n, g).
     """
+    m = gmpy2.mpz(m)
+
     n = public_key[0]
     g = public_key[1]
 
@@ -18,11 +20,12 @@ def encrypt(m, public_key, r=None):
         raise ValueError("message cannot exceed n, {} > {}".format(m, n))
 
     if r is None:
-        r = randint(0, n)
+        r = randint(1, n-1)
+        print(f"  r: {r}")
+    r = gmpy2.mpz(r)
     logging.debug(f"    r: {r}")
 
-    cipher_text = (g ** m) * (r ** n)
-    cipher_text = cipher_text % (n ** 2)
+    cipher_text = ((g ** m) * (r ** n)) % (n ** 2)
 
     return cipher_text
 
@@ -35,10 +38,20 @@ def decrypt(c, public_key, private_key):
 
     lambda_n = private_key[0]
     mu = private_key[1]
+    
     n = public_key[0]
 
-    c_lambda_mod_n2 = gmpy2.powmod(c, lambda_n, n**2)
-    message = L(c_lambda_mod_n2, n) * mu % n
+    print(lambda_n)
+    print(mu)
+    print(n)
+
+    n2 = n**2
+
+    if c > n2:
+        raise ValueError("ciphertext must be less than n^2 (c: {}, n^2: {})".format(c, n2))
+
+    c_lambda_mod_n2 = gmpy2.powmod(c, lambda_n, n2)
+    message = (L(c_lambda_mod_n2, n) * mu) % n
 
     return message
 

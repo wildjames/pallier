@@ -1,7 +1,11 @@
-import pytest
+import logging
+
 import helpers
 import pallier_parser
+import pytest
 from sympy.ntheory import factorint
+
+logging.basicConfig(level=logging.DEBUG)
 
 
 L_tests = [
@@ -36,6 +40,7 @@ def test_prime_generator():
 
 # Taken from https://asecuritysite.com/principles_pub/pal_ex
 keygen_tests = [
+    [(13, 17, 4886), {"public": (221, 4886), "private": (48, 159)}],
     [(47, 67, 4787652), {"public": (3149, 4787652), "private": (1518, 206)}],
     [(43, 41, 150), {"public": (1763, 150), "private": (840, 672)}],
 ]
@@ -54,8 +59,10 @@ message_tests = [
     123,
     1234,
     12345,
-    123456,
+    # 123456,
+    # 1234567,
 ]
+
 
 @pytest.mark.parametrize("message", message_tests)
 def test_encrypt_decrypt(message):
