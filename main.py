@@ -6,6 +6,11 @@ from pallier_parser import add_homo, decrypt, encrypt, is_homomorphic
 logging.basicConfig(level=logging.DEBUG)
 
 
+def is_homomorphic():
+    """Returns True if the implementation is homomorphic."""
+    return False
+
+
 def execute():
     message = 1
     p = 5

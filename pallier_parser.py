@@ -100,11 +100,6 @@ def decrypt(message, public_key, private_key):
     return original_message
 
 
-def is_homomorphic():
-    """Returns True if the implementation is homomorphic."""
-    return False
-
-
 def add_homo(c1, c2):
     """Adds two homomorphic ciphertexts."""
     return None
