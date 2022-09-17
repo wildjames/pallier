@@ -84,11 +84,11 @@ def test_encrypt_decrypt(message):
 
 def test_homomorphism():
     """Tests that the implementation is homomorphic. 
-    Checks 10,000 generated numbers. Using primes with 3 digits,
-    messages of up to 6 digits can be encrypted.
+    Checks 100 generated message combinations. 
+    Using primes with 3 digits, messages of up to 6 digits can be encrypted.
     """
 
-    for _ in range(10000):
-        a = randint(1, 99999)
-        b = randint(1, 99999)
-        assert main.is_homomorphic(a, b, prime_length=3) == True
+    for _ in range(100):
+        a = randint(1, 9999)
+        b = randint(1, 9999)
+        assert is_homomorphic(a, b, prime_length=3) == True

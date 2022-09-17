@@ -72,7 +72,7 @@ def encrypt(m, public_key, init_r=None):
     encrypted_message: int
         The encrypted message.
     """
-    logging.degug("Encrypting message {}...".format(m))
+    logging.debug("Encrypting message {}...".format(m))
     m = gmpy2.mpz(m)
 
     n = public_key[0]
