@@ -1,6 +1,7 @@
 import logging
 from random import randint
 
+from gmpy2 import mpz
 import helpers
 import pallier_parser
 from main import is_homomorphic
@@ -61,6 +62,31 @@ def test_calculate_keypair(nums, expected):
     assert helpers.calculate_keypair(p, q, g) == expected
 
 
+encryption_tests = [
+    [(5, (mpz(16751089), mpz(93932148945646)), 9097175), 269016111860835],
+    [(432, (mpz(80501411), mpz(902514156098306)), 41470621), 4992445291325108],
+]
+
+
+@pytest.mark.parametrize("inputs,expected", encryption_tests)
+def test_encryption(inputs, expected):
+    """Tests that the encryption is working as intended."""
+    message, public_key, init_r = inputs
+    assert pallier_parser.encrypt(message, public_key, init_r) == expected
+
+
+decryption_tests = [
+    [({'public': (mpz(18057373), mpz(195062812669755)), 'private': (mpz(3007818), mpz(1771420))}, 129050848160304), 403],
+    [({'public': (mpz(38151527), mpz(367791877145174)), 'private': (mpz(19069440), mpz(16335875))}, 504324473855033), 9751]
+]
+
+@pytest.mark.parametrize("inputs,expected", decryption_tests)
+def test_decryption(inputs, expected):
+    """Tests that the decryption is working as intended."""
+    keypair, message = inputs
+    assert pallier_parser.decrypt(message, keypair["public"], keypair["private"]) == expected
+
+
 message_tests = [
     1,
     12,
@@ -68,6 +94,7 @@ message_tests = [
     1234,
     12345,
     123456,
+    # Could go on but it'll take forever on my laptop
 ]
 
 
@@ -83,12 +110,15 @@ def test_encrypt_decrypt(message):
 
 
 def test_homomorphism():
-    """Tests that the implementation is homomorphic. 
-    Checks 100 generated message combinations. 
+    """Tests that the implementation is homomorphic.
+    Checks 10 generated message combinations.
     Using primes with 3 digits, messages of up to 6 digits can be encrypted.
     """
 
-    for _ in range(100):
+    for _ in range(10):
         a = randint(1, 9999)
         b = randint(1, 9999)
-        assert is_homomorphic(a, b, prime_length=3) == True
+        if not is_homomorphic(a, b, prime_length=3) == True:
+            print(a, b)
+            assert False
+
