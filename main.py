@@ -1,7 +1,7 @@
 import logging
 
 from helpers import calculate_keypair
-from pallier_parser import *
+from paillier_parser import *
 
 logging.basicConfig(level=logging.DEBUG)
 

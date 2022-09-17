@@ -3,7 +3,7 @@ from random import randint
 
 from gmpy2 import mpz
 import helpers
-import pallier_parser
+import paillier_parser
 from main import is_homomorphic
 import pytest
 from sympy.ntheory import factorint
@@ -72,7 +72,7 @@ encryption_tests = [
 def test_encryption(inputs, expected):
     """Tests that the encryption is working as intended."""
     message, public_key, init_r = inputs
-    assert pallier_parser.encrypt(message, public_key, init_r) == expected
+    assert paillier_parser.encrypt(message, public_key, init_r) == expected
 
 
 decryption_tests = [
@@ -84,7 +84,7 @@ decryption_tests = [
 def test_decryption(inputs, expected):
     """Tests that the decryption is working as intended."""
     keypair, message = inputs
-    assert pallier_parser.decrypt(message, keypair["public"], keypair["private"]) == expected
+    assert paillier_parser.decrypt(message, keypair["public"], keypair["private"]) == expected
 
 
 message_tests = [
@@ -103,9 +103,9 @@ def test_encrypt_decrypt(message):
     """Tests that the encryption and decryption is working as intended."""
     message_length = len(str(message))
     prime_length = (message_length // 2) + 1
-    keypair = pallier_parser.generate_keypair(prime_length=prime_length)
-    encrypted = pallier_parser.encrypt(message, keypair["public"])
-    decrypted = pallier_parser.decrypt(encrypted, keypair["public"], keypair["private"])
+    keypair = paillier_parser.generate_keypair(prime_length=prime_length)
+    encrypted = paillier_parser.encrypt(message, keypair["public"])
+    decrypted = paillier_parser.decrypt(encrypted, keypair["public"], keypair["private"])
     assert decrypted == message
 
 
