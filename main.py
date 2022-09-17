@@ -6,17 +6,29 @@ from pallier_parser import *
 logging.basicConfig(level=logging.DEBUG)
 
 
-def is_homomorphic():
+def is_homomorphic(message_a, message_b, prime_length=4):
     """Returns True if the implementation is homomorphic."""
-    return False
+
+    keypair = generate_keypair(prime_length)
+
+    encrypted_a = encrypt(message_a, keypair["public"])
+    encrypted_b = encrypt(message_b, keypair["public"])
+
+    encrypted_sum = add_homo(encrypted_a, encrypted_b, keypair["public"])
+
+    decrypted_sum = decrypt(encrypted_sum, keypair["public"], keypair["private"])
+
+    logging.debug("Checking for homomorphism in the implementation.")
+    logging.debug(f"Message A: {message_a}")
+    logging.debug(f"Message B: {message_b}")
+    logging.debug(f"Sum: {message_a + message_b}")
+    logging.debug(f"Decrypted sum: {decrypted_sum}")
+
+    return decrypted_sum == (message_a + message_b)
 
 
 def execute():
-    message = 1
-    p = 5
-    q = 7
-    g = 253
-    r = None
+    message = 593
 
     message_length = len(str(message))
     logging.info(f"Message length: {message_length}")
@@ -25,7 +37,7 @@ def execute():
     keypair = generate_keypair(prime_length=4)
     logging.info(f"  Keys:  {keypair}")
 
-    encrypted = encrypt(message, keypair["public"], init_r=r)
+    encrypted = encrypt(message, keypair["public"], init_r=None)
     logging.info(f"  Encrypted message: {encrypted}")
 
     decrypted = decrypt(encrypted, keypair["public"], keypair["private"])
@@ -36,5 +48,11 @@ def execute():
     )
 
 
-if __name__ in "__main__":
+if __name__ == "__main__":
     execute()
+
+    print("\n\n")
+
+    result = is_homomorphic(2, 6)
+
+    print("\n\nHomomorphic? {}".format(result))

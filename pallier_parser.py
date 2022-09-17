@@ -3,7 +3,7 @@ from random import randint
 
 import gmpy2
 
-from helpers import *
+from helpers import L, calculate_keypair, generate_prime
 
 
 def generate_keypair(prime_length=4):
@@ -28,6 +28,7 @@ def generate_keypair(prime_length=4):
     keypair: dict
         A dict containing the public and private keys.
     """
+    logging.debug("Generating random keypair...")
 
     while True:
         p = generate_prime(prime_length)
@@ -42,7 +43,7 @@ def generate_keypair(prime_length=4):
     n = p * q
     n2 = n**2
     g = randint(0, (n2) - 1)
-    g = mpz(g)
+    g = gmpy2.mpz(g)
 
     keypair = calculate_keypair(p, q, g)
     # If this fails, try again
@@ -71,6 +72,7 @@ def encrypt(m, public_key, init_r=None):
     encrypted_message: int
         The encrypted message.
     """
+    logging.degug("Encrypting message {}...".format(m))
     m = gmpy2.mpz(m)
 
     n = public_key[0]
@@ -117,6 +119,7 @@ def decrypt(message, public_key, private_key):
     decrypted_message: int
         The decrypted message.
     """
+    logging.debug("Decrypting message {}...".format(message))
 
     lambda_n = private_key[0]
     mu = private_key[1]
@@ -141,7 +144,7 @@ def decrypt(message, public_key, private_key):
 
 def add_homo(c1, c2, public_key):
     """Adds two homomorphic ciphertexts.
-    
+
     Inputs:
     -------
     c1: int
@@ -150,7 +153,7 @@ def add_homo(c1, c2, public_key):
         The second message to add
     public_key: tuple
         The public key, of the form (n, g)
-    
+
     Returns:
     --------
     summed_message: int

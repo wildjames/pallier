@@ -1,7 +1,9 @@
 import logging
+from random import randint
 
 import helpers
 import pallier_parser
+from main import is_homomorphic
 import pytest
 from sympy.ntheory import factorint
 
@@ -45,9 +47,9 @@ keygen_tests = [
     [(47, 67, 4787652), {"public": (3149, 4787652), "private": (1518, 206)}],
     [(43, 41, 150), {"public": (1763, 150), "private": (840, 672)}],
     # Invalid inputs, should return None
-    # fails because g is not coprime to n^2 (g = {13, 17, 221})
+    # fails because g is not coprime to n^2 (g = {13, 17, 221})
     [(13, 17, 221), None],
-    # g is greater than n^2
+    # g is greater than n^2
     [(13, 17, 48842), None],
 ]
 
@@ -78,3 +80,15 @@ def test_encrypt_decrypt(message):
     encrypted = pallier_parser.encrypt(message, keypair["public"])
     decrypted = pallier_parser.decrypt(encrypted, keypair["public"], keypair["private"])
     assert decrypted == message
+
+
+def test_homomorphism():
+    """Tests that the implementation is homomorphic. 
+    Checks 10,000 generated numbers. Using primes with 3 digits,
+    messages of up to 6 digits can be encrypted.
+    """
+
+    for _ in range(10000):
+        a = randint(1, 99999)
+        b = randint(1, 99999)
+        assert main.is_homomorphic(a, b, prime_length=3) == True

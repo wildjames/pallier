@@ -1,5 +1,4 @@
 import logging
-from calendar import c
 from random import randint
 
 import gmpy2
@@ -15,7 +14,7 @@ def calculate_keypair(p, q, g):
     private = (lambda_n, mu)
 
     This is generated based off two prime numbers, p and q, and a generator, g.
-    g must be an integer < n^2, where n = p * q. It is subject to some other conditions, 
+    g must be an integer < n^2, where n = p * q. It is subject to some other conditions,
     for which refer to Paillier's 1999 paper.
 
     If the combination of p, q, and g does not satisfy the conditions, None is returned.
@@ -35,6 +34,11 @@ def calculate_keypair(p, q, g):
     keypair: dict
         A dict containing the public and private keys.
     """
+    logging.debug("Calculating keypair from:")
+    logging.debug(f"p = {p}")
+    logging.debug(f"q = {q}")
+    logging.debug(f"g = {g}")
+
     # Just make sure they're mpz objects
     p = mpz(p)
     q = mpz(q)
@@ -56,7 +60,7 @@ def calculate_keypair(p, q, g):
         return
     g = mpz(g)
 
-    # Check that g is coprime with n^2
+    # Check that g is coprime with n^2
     if gmpy2.gcd(g, n2) != 1:
         logging.debug(f"    g = {g} is not coprime to n^2 = {n2}")
         return
@@ -100,6 +104,8 @@ def L(x, n):
 
 def generate_prime(n_digits=4):
     """Returns a prime number of the specified length."""
+    logging.debug(f"Generating a prime number of length {n_digits}...")
+
     lo = int(10 ** (n_digits - 1))
     hi = int(10**n_digits)
 
@@ -113,3 +119,4 @@ def generate_prime(n_digits=4):
         return generate_prime(n_digits=n_digits)
 
     return number
+
