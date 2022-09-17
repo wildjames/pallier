@@ -25,6 +25,8 @@ pip install -U pip
 pip install -r requirements.txt
 ```
 
+To run a demo, just open a terminal and run `python3 main.py`. Otherwise, the important
+
 
 # Notes and thoughts
 
@@ -39,4 +41,7 @@ q = 7
 g = 253
 r = 10
 ```
-then messages get garbled. Is one of my checks incorrect? Probably. Look at `calculate_keypair` again.
+then messages get garbled. Is one of my checks incorrect? Probably. Look at `calculate_keypair` again. Further testing reveals that a different selection of `r` results in a correct decryption. For example, `r = 22` works, but `r = 7` or `15` doesn't. The selection of `r`, according to wikipedia is simply a random number `0 < r < n`. Further investigation reveals that the decryption does not match the original message in cases where `r` is not coprime with n; in this case, `n = 35`, with factors `5, 7`. This is not specified in the wikipedia page, from which I am getting the algorithm, and I don't see a mention of it in the paper either.
+
+Can I construct a failure state based off this understanding. Take the primes `11` and `3`, and choose a value of `g = 34`, which satisfies the conditions for `g`. Then, choosing a value of `r = {15, 12, 11, 9, 22}` will induce a corrupted message, but values of `r = {13, 14, 8, 20}` results in the expected recovery of the message. Do I need a check for this condition?
+

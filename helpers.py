@@ -91,7 +91,8 @@ def calculate_keypair(p, q, g):
 
     # Calculate mu
     g_lambda_n2 = gmpy2.powmod(g, lambda_n, n2)
-    mu = gmpy2.powmod(L(g_lambda_n2, n), -1, n)
+    mu_tmp = L(g_lambda_n2, n)
+    mu = gmpy2.powmod(mu_tmp, -1, n)
 
     logging.debug(f"    p: {p}")
     logging.debug(f"    q: {q}")

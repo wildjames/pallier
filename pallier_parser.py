@@ -30,7 +30,7 @@ def encrypt(m, public_key, r=None):
     return cipher_text
 
 
-def decrypt(c, public_key, private_key):
+def decrypt(message, public_key, private_key):
     """Decrypts a message using the private key.
 
     The private key is a tuple of the form (lambda, mu).
@@ -41,21 +41,16 @@ def decrypt(c, public_key, private_key):
 
     n = public_key[0]
 
-    print(lambda_n)
-    print(mu)
-    print(n)
-
     n2 = n**2
-
-    if c > n2:
+    if message > n2:
         raise ValueError(
-            "ciphertext must be less than n^2 (c: {}, n^2: {})".format(c, n2)
+            "ciphertext must be less than n^2 (c: {}, n^2: {})".format(message, n2)
         )
 
-    c_lambda_mod_n2 = gmpy2.powmod(c, lambda_n, n2)
-    message = (L(c_lambda_mod_n2, n) * mu) % n
+    c_lambda_mod_n2 = gmpy2.powmod(message, lambda_n, n2)
+    original_message = (L(c_lambda_mod_n2, n) * mu) % n
 
-    return message
+    return original_message
 
 
 def is_homomorphic():
