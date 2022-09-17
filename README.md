@@ -25,14 +25,12 @@ pip install -U pip
 pip install -r requirements.txt
 ```
 
-To run a demo, just open a terminal and run `python3 main.py`. Otherwise, the important
+To run a demo, just open a terminal and run `python3 main.py`. Otherwise, the important functions are in `paillier_parser.py` script, with the workhorse functions in the `helper.py` script. 
 
 
 # Notes and thoughts
 
 The pallier system seems to be attractive in the sense that the encryption of two messages, in conjunction with a public key, can be converted into the encryption of the *sum* of the two messages, which is not typically possible. I will admit that the utility of this is not immediately apparent to me, but I can at least appreciate that this is interesting behaviour.
-
----
 
 Also, since for now I have little understanding of what I'm doing, I'll not write tests. That can come later, and I'll probably do an initial coarse one by taking a message, encrypting it, decrypting the result, and seeing if it's the same. In the meantime I'll get the key generation working.
 

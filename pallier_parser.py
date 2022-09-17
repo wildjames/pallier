@@ -5,6 +5,8 @@ import gmpy2
 
 from helpers import L, calculate_keypair, generate_prime
 
+logging.basicConfig(level=logging.DEBUG)
+
 
 def generate_keypair(prime_length=4):
     """Returns a dict, containing the public and private keys. These will be of the form:
@@ -72,7 +74,7 @@ def encrypt(m, public_key, init_r=None):
     encrypted_message: int
         The encrypted message.
     """
-    logging.debug("Encrypting message {}...".format(m))
+    logging.debug("  Encrypting message {}...".format(m))
     m = gmpy2.mpz(m)
 
     n = public_key[0]
@@ -119,7 +121,7 @@ def decrypt(message, public_key, private_key):
     decrypted_message: int
         The decrypted message.
     """
-    logging.debug("Decrypting message {}...".format(message))
+    logging.debug("  Decrypting message {}...".format(message))
 
     lambda_n = private_key[0]
     mu = private_key[1]
