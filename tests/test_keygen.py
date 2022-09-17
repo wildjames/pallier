@@ -40,9 +40,15 @@ def test_prime_generator():
 
 # Taken from https://asecuritysite.com/principles_pub/pal_ex
 keygen_tests = [
+    # Valid inputs, should produce keypairs
     [(13, 17, 4886), {"public": (221, 4886), "private": (48, 159)}],
     [(47, 67, 4787652), {"public": (3149, 4787652), "private": (1518, 206)}],
     [(43, 41, 150), {"public": (1763, 150), "private": (840, 672)}],
+    # Invalid inputs, should return None
+    # fails because g is not coprime to n^2 (g = {13, 17, 221})
+    [(13, 17, 221), None],
+    # g is greater than n^2
+    [(13, 17, 48842), None],
 ]
 
 

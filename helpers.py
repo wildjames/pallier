@@ -14,8 +14,26 @@ def calculate_keypair(p, q, g):
     public  = (n, g)
     private = (lambda_n, mu)
 
-    This is generated based off two coprime numbers, p and q, and a generator, g.
-    g must be an integer < n^2, where n = p * q.
+    This is generated based off two prime numbers, p and q, and a generator, g.
+    g must be an integer < n^2, where n = p * q. It is subject to some other conditions, 
+    for which refer to Paillier's 1999 paper.
+
+    If the combination of p, q, and g does not satisfy the conditions, None is returned.
+    This has a notable exception! p and q are assumed to be prime; no checks are done to verify this!
+
+    Inputs:
+    -------
+    p: int
+        A prime number.
+    q: int
+        A prime number.
+    g: int
+        A number in the range 0 < g < n^2, that must satisfy some conditions.
+
+    Returns:
+    --------
+    keypair: dict
+        A dict containing the public and private keys.
     """
     # Just make sure they're mpz objects
     p = mpz(p)
@@ -34,20 +52,22 @@ def calculate_keypair(p, q, g):
     # Generate a random integer, g, that is both less than n^2, and coprime to n^2
     n2 = n**2
     if not g < n2:
-        raise ValueError("g must be less than (p*q)^2")
+        logging.debug("g must be less than (p*q)^2")
+        return
     g = mpz(g)
 
+    # Check that g is coprime with n^2
     if gmpy2.gcd(g, n2) != 1:
         logging.debug(f"    g = {g} is not coprime to n^2 = {n2}")
         return
 
     # Are these checks actually necessary? You get them for free if p and q have the same length, I think.
-    # Is gcd((g^lambda-1)/n,n) equal to 1?
-    if gmpy2.gcd((g**lambda_n - 1) // n, n) != 1:
+    # Is L(g^lambda) coprime with n?
+    if gmpy2.gcd(L(g**lambda_n, n), n) != 1:
         logging.debug(f"    (g^lambda-1)/n is not coprime to n = {n}")
         return
 
-    # # Is g^lambda - 1 mod n == 1?
+    # Is g^lambda - 1 mod n == 1?
     g_lambda_n = gmpy2.powmod(g, lambda_n, n)
     if g_lambda_n != 1:
         logging.debug(f"    g^lambda-1 = {g_lambda_n} is not equal to 1")

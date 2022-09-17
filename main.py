@@ -1,7 +1,7 @@
 import logging
 
-from helpers import generate_keypair, calculate_keypair
-from pallier_parser import add_homo, decrypt, encrypt, is_homomorphic
+from helpers import calculate_keypair
+from pallier_parser import *
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -21,7 +21,8 @@ def execute():
     message_length = len(str(message))
     logging.info(f"Message length: {message_length}")
 
-    keypair = calculate_keypair(p, q, g)
+    # keypair = calculate_keypair(p, q, g)
+    keypair = generate_keypair(prime_length=4)
     logging.info(f"  Keys:  {keypair}")
 
     encrypted = encrypt(message, keypair["public"], init_r=r)

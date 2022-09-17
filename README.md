@@ -45,5 +45,5 @@ then messages get garbled. Is one of my checks incorrect? Probably. Look at `cal
 
 Can I construct a failure state based off this understanding. Take the primes `11` and `3`, and choose a value of `g = 34`, which satisfies the conditions for `g`. Then, choosing a value of `r = {15, 12, 11, 9, 22}` will induce a corrupted message, but values of `r = {13, 14, 8, 20}` results in the expected recovery of the message. Do I need a check for this condition?
 
-Found it! I was missing a check in the encrypt function - the encrypted message had to be coprime with n, as I found from my tests. Fixed now, by checking in both the encrypt and decrypt functions.
+Found it! I was missing a check in the encrypt function - the encrypted message had to be coprime with n, as I found from my tests; this was actually stipulated in the wikipedia page, I just missed it. Fixed now, by checking in both the encrypt and decrypt functions.
 
