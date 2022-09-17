@@ -59,8 +59,7 @@ message_tests = [
     123,
     1234,
     12345,
-    # 123456,
-    # 1234567,
+    123456,
 ]
 
 
@@ -69,7 +68,7 @@ def test_encrypt_decrypt(message):
     """Tests that the encryption and decryption is working as intended."""
     message_length = len(str(message))
     prime_length = (message_length // 2) + 1
-    keypair = helpers.generate_keypair(prime_length=prime_length)
+    keypair = pallier_parser.generate_keypair(prime_length=prime_length)
     encrypted = pallier_parser.encrypt(message, keypair["public"])
     decrypted = pallier_parser.decrypt(encrypted, keypair["public"], keypair["private"])
     assert decrypted == message

@@ -8,42 +8,6 @@ from gmpy2 import mpz
 logging.basicConfig(level=logging.DEBUG)
 
 
-def generate_keypair(prime_length=4):
-    """Returns a dict, containing the public and private keys. These will be of the form:
-
-    public  = (n, g)
-    private = (lambda_n, mu)
-
-    This is generated based off two coprime numbers, p and q, and a generator, g.
-    g must be an integer < n^2, where n = p * q.
-
-    Random values will be generated for p, q, and g.
-    """
-
-    while True:
-        p = generate_prime(prime_length)
-        print(f"  p: {p}")
-        q = generate_prime(prime_length)
-        print(f"  q: {q}")
-
-        # Check that the product of p and q is coprime with the product of (q-1), (p-1).
-        if gmpy2.gcd(p * q, ((p - 1) * (q - 1))) == 1:
-            break
-
-    # Generate a random integer, g, that is both less than n^2, and coprime to n^2
-    n = p * q
-    n2 = n**2
-    g = randint(0, (n2) - 1)
-    g = mpz(g)
-    print(f"  g: {g}")
-
-    keypair = calculate_keypair(p, q, g)
-    if keypair is None:
-        print("Failed to generate valid keypair, trying again.")
-        return generate_keypair(prime_length=prime_length)
-    return keypair
-
-
 def calculate_keypair(p, q, g):
     """Returns a dict, containing the public and private keys. These will be of the form:
 
@@ -59,7 +23,7 @@ def calculate_keypair(p, q, g):
 
     # Check that the product of p and q is coprime with the product of (q-1), (p-1).
     if not gmpy2.gcd(p * q, ((p - 1) * (q - 1))) == 1:
-        print("!")
+        logging.debug("p and q are not coprime with (p-1)(q-1)")
         return
 
     n = p * q
@@ -104,9 +68,7 @@ def calculate_keypair(p, q, g):
     logging.debug(f"    mu: {mu}")
 
     # Build the output
-    output = {}
-    output["public"] = (n, g)
-    output["private"] = (lambda_n, mu)
+    output = {"public": (n, g), "private": (lambda_n, mu)}
 
     return output
 

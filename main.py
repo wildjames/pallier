@@ -8,10 +8,10 @@ logging.basicConfig(level=logging.DEBUG)
 
 def execute():
     message = 1
-    p = 11
-    q = 3
-    g = 34
-    r = 20
+    p = 5
+    q = 7
+    g = 253
+    r = None
 
     message_length = len(str(message))
     logging.info(f"Message length: {message_length}")
@@ -19,7 +19,7 @@ def execute():
     keypair = calculate_keypair(p, q, g)
     logging.info(f"  Keys:  {keypair}")
 
-    encrypted = encrypt(message, keypair["public"], r=r)
+    encrypted = encrypt(message, keypair["public"], init_r=r)
     logging.info(f"  Encrypted message: {encrypted}")
 
     decrypted = decrypt(encrypted, keypair["public"], keypair["private"])

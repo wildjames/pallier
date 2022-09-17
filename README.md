@@ -11,8 +11,8 @@ From Jay:
 > 1. Key Generation: generate public /private Pailier keypair
 > 2. Encryption: Encrypt a message m to ouput a cipher text c
 > 3. Decryption: Decrypt c to get back m
-> 4. Add_homo: takes input two cipher text to  performs addition
-> 4. Is_Homomorphic : Takes the added cipher text  from Add_homo() and checks its homomorphic property . Returns  True / False
+> 4. Add_homo: takes input two cipher text to performs addition
+> 4. Is_Homomorphic : Takes the added cipher text from Add_homo() and checks its homomorphic property . Returns  True / False
 > 
 > Use Gympy2 library for all the integers used in the implementation.
 
@@ -44,4 +44,6 @@ r = 10
 then messages get garbled. Is one of my checks incorrect? Probably. Look at `calculate_keypair` again. Further testing reveals that a different selection of `r` results in a correct decryption. For example, `r = 22` works, but `r = 7` or `15` doesn't. The selection of `r`, according to wikipedia is simply a random number `0 < r < n`. Further investigation reveals that the decryption does not match the original message in cases where `r` is not coprime with n; in this case, `n = 35`, with factors `5, 7`. This is not specified in the wikipedia page, from which I am getting the algorithm, and I don't see a mention of it in the paper either.
 
 Can I construct a failure state based off this understanding. Take the primes `11` and `3`, and choose a value of `g = 34`, which satisfies the conditions for `g`. Then, choosing a value of `r = {15, 12, 11, 9, 22}` will induce a corrupted message, but values of `r = {13, 14, 8, 20}` results in the expected recovery of the message. Do I need a check for this condition?
+
+Found it! I was missing a check in the encrypt function - the encrypted message had to be coprime with n, as I found from my tests. Fixed now, by checking in both the encrypt and decrypt functions.
 
