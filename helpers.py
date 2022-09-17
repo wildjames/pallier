@@ -35,9 +35,9 @@ def calculate_keypair(p, q, g):
         A dict containing the public and private keys.
     """
     logging.debug("Calculating keypair from:")
-    logging.debug(f"p = {p}")
-    logging.debug(f"q = {q}")
-    logging.debug(f"g = {g}")
+    logging.debug(f"    p = {p}")
+    logging.debug(f"    q = {q}")
+    logging.debug(f"    g = {g}")
 
     # Just make sure they're mpz objects
     p = mpz(p)
@@ -82,11 +82,8 @@ def calculate_keypair(p, q, g):
     mu_tmp = L(g_lambda_n2, n)
     mu = gmpy2.powmod(mu_tmp, -1, n)
 
-    logging.debug(f"    p: {p}")
-    logging.debug(f"    q: {q}")
     logging.debug(f"    n: {n}")
     logging.debug(f"    lambda: {lambda_n}")
-    logging.debug(f"    g:   {g}")
     logging.debug(f"    g^lambda mod n: {g_lambda_n}")
     logging.debug(f"    L(g^lambda mod n^2): {L(g_lambda_n2, n)}")
     logging.debug(f"    mu: {mu}")
