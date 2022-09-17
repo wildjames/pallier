@@ -7,6 +7,7 @@ from gmpy2 import mpz
 
 logging.basicConfig(level=logging.DEBUG)
 
+
 def generate_keypair(prime_length=4):
     """Returns a dict, containing the public and private keys. These will be of the form:
 
