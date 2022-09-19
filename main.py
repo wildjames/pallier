@@ -1,7 +1,7 @@
 import logging
 
 from helpers import calculate_keypair
-from paillier_parser import *
+from paillier_parser import generate_keypair, encrypt, decrypt, add_homo
 
 logging.basicConfig(level=logging.DEBUG)
 

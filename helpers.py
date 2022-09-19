@@ -4,8 +4,6 @@ from random import randint
 import gmpy2
 from gmpy2 import mpz
 
-logging.basicConfig(level=logging.DEBUG)
-
 
 def calculate_keypair(p, q, g):
     """Returns a dict, containing the public and private keys. These will be of the form:
@@ -116,4 +114,3 @@ def generate_prime(n_digits=4):
         return generate_prime(n_digits=n_digits)
 
     return number
-

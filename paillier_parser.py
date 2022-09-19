@@ -5,8 +5,6 @@ import gmpy2
 
 from helpers import L, calculate_keypair, generate_prime
 
-logging.basicConfig(level=logging.DEBUG)
-
 
 def generate_keypair(prime_length=4):
     """Returns a dict, containing the public and private keys. These will be of the form:
@@ -22,9 +20,9 @@ def generate_keypair(prime_length=4):
     Inputs:
     -------
     prime_length: int, optional
-        The length of the primes to generate; the max message length can be no longer than (pq), 
+        The length of the primes to generate; the max message length can be no longer than (pq),
         so choose this wisely. Defaults to 4, allowing messages of 8 digits.
-    
+
     Returns:
     --------
     keypair: dict
