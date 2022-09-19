@@ -27,6 +27,7 @@ pip install -r requirements.txt
 
 To run a demo, just open a terminal and run `python3 main.py`. Otherwise, the important functions are in `paillier_parser.py` script, with the workhorse functions in the `helper.py` script. 
 
+I also wrote some tests. To go through the tests, simply run `pytest` from the root directory, or `pytest -vv` for a more verbose version. 
 
 # Notes and thoughts
 
